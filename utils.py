@@ -4,9 +4,9 @@ from math import *
 import tqdm
 import random
 import os
+import re
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import TruncatedSVD
+from gensim.models import word2vec
 
 import setting
 from train import Set_fold
@@ -72,55 +72,6 @@ def TargetEncoding(train, test, target, cat_cols, num_folds=5):
             tmp[idx_2] = train[c].iloc[idx_2].map(target_mean)
         train[c] = tmp
     return train, test
-
-# 未完成
-"""
-def svd_feature(prefix, df, traintest, groupby, target,n_comp):
-    tfidf_vec = TfidfVectorizer(ngram_range=(1,1), max_features=None)
-    df_bag = pd.DataFrame(df[[groupby, target]])
-    df_bag = df_bag.groupby(groupby, as_index=False)[target].agg({'list':(lambda x: list(x))}).reset_index()
-    df_bag[target + '_list']=df_bag['list'].apply(lambda x: str(x).replace('[','').replace(']','').replace(',',' '))
-
-    df_bag = df_bag.merge(traintest,on=groupby,how='left')
-    df_bag_train = df_bag[df_bag['target'].notnull()].reset_index(drop=True)
-    df_bag_test = df_bag[df_bag['target'].isnull()].reset_index(drop=True)
-
-    tfidf_full_vector = tfidf_vec.fit_transform(df_bag[target + '_list'])
-    tfidf_train_vector = tfidf_vec.transform(df_bag_train[target + '_list'])
-    tfidf_test_vector = tfidf_vec.transform(df_bag_test[target + '_list'])
-
-    svd_vec = TruncatedSVD(n_components=5, algorithm='arpack')
-    svd_vec.fit(tfidf_full_vector)
-    svd_train = pd.DataFrame(svd_vec.transform(tfidf_train_vector))
-    svd_test = pd.DataFrame(svd_vec.transform(tfidf_test_vector))
-
-    svd_train.columns = ['svd_%s_%s_%d'%(prefix,target,x) for x in range(n_comp)]
-    svd_train[groupby] = df_bag_train[groupby]
-    svd_test.columns = ['svd_%s_%s_%d'%(prefix,target,x) for x in range(n_comp)]
-    svd_test[groupby] = df_bag_test[groupby]
-    #df_svd = pd.concat([svd_train,svd_test],axis=0)
-    print ('svd_train:' + str(svd_train.shape))
-    print ('svd_test:' + str(svd_test.shape))
-    return svd_train,svd_test
-
-def word2vec_feature(prefix, df, groupby, target,size):
-    df_bag = pd.DataFrame(df[[groupby, target]])
-    df_bag[target] = df_bag[target].astype(str)
-    df_bag[target].fillna('NAN', inplace=True)
-    df_bag = df_bag.groupby(groupby, as_index=False)[target].agg({'list':(lambda x: list(x))}).reset_index()
-    doc_list = list(df_bag['list'].values)
-    w2v = Word2Vec(doc_list, size=size, window=3, min_count=1, workers=32)
-    vocab_keys = list(w2v.wv.vocab.keys())
-    w2v_array = []
-    for v in vocab_keys :
-        w2v_array.append(list(w2v.wv[v]))
-    df_w2v = pd.DataFrame()
-    df_w2v['vocab_keys'] = vocab_keys    
-    df_w2v = pd.concat([df_w2v, pd.DataFrame(w2v_array)], axis=1)
-    df_w2v.columns = [target] + ['w2v_%s_%s_%d'%(prefix,target,x) for x in range(size)]
-    print ('df_w2v:' + str(df_w2v.shape))
-    return df_w2v
-"""
 
 def StandardScale(df):
     scaler = StandardScaler()
