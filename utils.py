@@ -6,7 +6,6 @@ import random
 import os
 import re
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from gensim.models import word2vec
 
 import setting
 from train import Set_fold
