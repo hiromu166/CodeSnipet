@@ -6,17 +6,17 @@ from sklearn.model_selection import KFold, StratifiedKFold, GroupKFold
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 import lightgbm as lgb
 
-import setting
-from metrics import *
+import Ville.setting
+from Ville.metrics import *
 
 # foldの定義
 def Set_fold(type, num_folds):
     if type == 'kfold':
-        folds = KFold(n_splits=num_folds, random_state=setting.SEED, shuffle=True)
+        folds = KFold(n_splits=num_folds, random_state=Ville.setting.SEED, shuffle=True)
     elif type == 'stratified':
-        folds = StratifiedKFold(n_splits=num_folds, random_state=setting.SEED, shuffle=True)
+        folds = StratifiedKFold(n_splits=num_folds, random_state=Ville.setting.SEED, shuffle=True)
     elif type == 'group':
-        folds = GroupKFold(n_splits=num_folds, random_state=setting.SEED, shuffle=True)
+        folds = GroupKFold(n_splits=num_folds, random_state=Ville.setting.SEED, shuffle=True)
     return folds
 
 def RFR(X_train, y_train, X_test, folds, loss):
@@ -30,7 +30,7 @@ def RFR(X_train, y_train, X_test, folds, loss):
 
         print("Fold {}".format(n_fold + 1), train_x.shape, valid_x.shape)
 
-        model = RandomForestRegressor(n_jobs=-1, random_state=setting.SEED)
+        model = RandomForestRegressor(n_jobs=-1, random_state=Ville.setting.SEED)
         model.fit(train_x, train_y)
 
         oof_preds[valid_idx] = model.predict(valid_x)
@@ -54,7 +54,7 @@ def RFC(X_train, y_train, X_test, folds, loss):
 
         print("Fold {}".format(n_fold + 1), train_x.shape, valid_x.shape)
 
-        model = RandomForestClassifier(n_jobs=-1, random_state=setting.SEED)
+        model = RandomForestClassifier(n_jobs=-1, random_state=Ville.setting.SEED)
         model.fit(train_x, train_y)
 
         oof_preds[valid_idx] = model.predict(valid_x)

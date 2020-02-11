@@ -1,19 +1,19 @@
 import pandas as pd
 import numpy as np
 
-import setting
+import Ville.setting
 
 def load_data_separate(target_name):
-    train = pd.read_csv(setting.TRAIN_PATH)
+    train = pd.read_csv(Ville.setting.TRAIN_PATH)
     X_train = train.drop([target_name], axis=1)
     y_train = train[[target_name]]
-    X_test = pd.read_csv(setting.TEST_PATH)
+    X_test = pd.read_csv(Ville.setting.TEST_PATH)
     num_tr = len(train)
     return X_train, y_train, X_test, num_tr
 
 def load_data_total(target_name):
-    train = pd.read_csv(setting.TRAIN_PATH)
-    test = pd.read_csv(setting.TEST_PATH)
+    train = pd.read_csv(Ville.setting.TRAIN_PATH)
+    test = pd.read_csv(Ville.setting.TEST_PATH)
     y_train = train[[target_name]]
     total = pd.concat([train.drop(target_name, axis=1), test]).reset_index(drop=True)
     return total, y_train

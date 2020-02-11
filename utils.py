@@ -7,14 +7,14 @@ import os
 import re
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
-import setting
-from train import Set_fold
+import Ville.setting
+from Ville.train import Set_fold
 
 # set all seed
 def SEED_Everything():
-    random.seed(setting.SEED)
-    os.environ['PYTHONHASHSEED'] = str(setting.SEED)
-    np.random.seed(setting.SEED)
+    random.seed(Ville.setting.SEED)
+    os.environ['PYTHONHASHSEED'] = str(Ville.setting.SEED)
+    np.random.seed(Ville.setting.SEED)
 
 #　二点間の距離を計算
 def LatLng_to_xyz(lat, lng):
